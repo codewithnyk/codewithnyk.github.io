@@ -423,45 +423,75 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
    ============================================================ */
 .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 .cert-card {
-  display: flex; align-items: flex-start; gap: 18px;
+  display: flex; flex-direction: column; gap: 0;
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 24px;
+  border-radius: var(--radius-lg); padding: 0;
   position: relative; overflow: hidden;
   opacity: 0; transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
 }
 .cert-card.visible { opacity: 1; transform: translateY(0); }
-.cert-card:hover { border-color: var(--accent); box-shadow: 0 4px 32px rgba(59,130,246,0.1); }
+.cert-card:hover { border-color: var(--accent); box-shadow: 0 8px 40px rgba(59,130,246,0.13); transform: translateY(-3px); }
 .cert-card::before {
-  content: ''; position: absolute; top: -2px; left: -2px; right: -2px; height: 3px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: var(--gradient); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   opacity: 0; transition: opacity var(--transition);
 }
 .cert-card:hover::before { opacity: 1; }
 
-.cert-logo {
-  width: 48px; height: 48px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  font-size: 1.5rem;
+/* Card body */
+.cert-card-body {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 22px 22px 14px; flex: 1;
 }
-.cert-logo.itsm    { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); }
-.cert-logo.docker  { background: rgba(36,150,237,0.12); border: 1px solid rgba(36,150,237,0.25); }
-.cert-logo.python  { background: rgba(255,212,59,0.1);  border: 1px solid rgba(255,212,59,0.25); }
 
-.cert-info h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
-.cert-info p  { font-size: 0.85rem; color: var(--text-muted); }
-.cert-issuer  { font-size: 0.75rem; color: var(--text-faint); font-family: var(--mono); }
+.cert-logo {
+  width: 52px; height: 52px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: #f1f5f9; border: 1px solid rgba(0,0,0,0.07);
+  overflow: hidden; padding: 6px;
+}
+.cert-logo img { width: 100%; height: 100%; object-fit: contain; }
+
+.cert-info { flex: 1; min-width: 0; }
+.cert-info h3 { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; line-height: 1.35; }
+.cert-info p  { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 5px; }
+.cert-issuer  { font-size: 0.73rem; color: var(--text-faint); font-family: var(--mono); }
 
 .cert-badge {
-  position: absolute; top: 16px; right: 16px;
+  position: absolute; top: 14px; right: 14px;
   padding: 3px 10px; border-radius: 20px;
-  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
   font-family: var(--mono); letter-spacing: 0.05em;
 }
-.cert-badge.itsm   { background: rgba(59,130,246,0.1);  color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
-.cert-badge.docker { background: rgba(36,150,237,0.1);  color: #2496ed;       border: 1px solid rgba(36,150,237,0.3); }
-.cert-badge.python { background: rgba(255,212,59,0.1);  color: var(--gold);   border: 1px solid rgba(255,212,59,0.3); }
-.cert-badge.award  { background: rgba(34,211,160,0.1);  color: var(--green);  border: 1px solid rgba(34,211,160,0.3); }
+.cert-badge.itsm       { background: rgba(59,130,246,0.1);  color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+.cert-badge.docker     { background: rgba(36,150,237,0.1);  color: #2496ed;       border: 1px solid rgba(36,150,237,0.3); }
+.cert-badge.python     { background: rgba(255,212,59,0.1);  color: var(--gold);   border: 1px solid rgba(255,212,59,0.3); }
+.cert-badge.award      { background: rgba(34,211,160,0.1);  color: var(--green);  border: 1px solid rgba(34,211,160,0.3); }
+.cert-badge.microsoft  { background: rgba(0,120,212,0.08);  color: #0078D4;       border: 1px solid rgba(0,120,212,0.25); }
+.cert-badge.github     { background: rgba(36,41,47,0.07);   color: #24292f;       border: 1px solid rgba(36,41,47,0.2); }
+.cert-badge.atlassian  { background: rgba(0,82,204,0.08);   color: #0052CC;       border: 1px solid rgba(0,82,204,0.25); }
+.cert-badge.servicenow { background: rgba(26,206,91,0.1);   color: #1ACE5B;       border: 1px solid rgba(26,206,91,0.3); }
+.cert-badge.linkedin   { background: rgba(10,102,194,0.08); color: #0A66C2;       border: 1px solid rgba(10,102,194,0.25); }
+
+/* Card footer with action buttons */
+.cert-actions {
+  display: flex; border-top: 1px solid var(--border);
+}
+.cert-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 10px; font-size: 0.8rem; font-weight: 600;
+  font-family: var(--mono); color: var(--text-muted);
+  transition: all var(--transition); text-decoration: none;
+  background: transparent; cursor: pointer;
+}
+.cert-btn:first-child { border-right: 1px solid var(--border); border-radius: 0 0 0 var(--radius-lg); }
+.cert-btn:last-child  { border-radius: 0 0 var(--radius-lg) 0; }
+.cert-btn:hover { background: rgba(59,130,246,0.06); color: var(--accent); }
+.cert-btn svg { width: 14px; height: 14px; flex-shrink: 0; transition: transform var(--transition); }
+.cert-btn:hover svg { transform: scale(1.15); }
+.cert-btn.verify-btn:hover { background: rgba(16,185,129,0.06); color: var(--green); }
+.cert-btn.verify-btn:hover svg { color: var(--green); }
 
 /* ============================================================
    EDUCATION
@@ -542,7 +572,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   .hero-photo-inner { width: 186px; height: 186px; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
 }
-  </style>
+  .cert-card h3{font-size:0.88rem}
+</style>
 </head>
 <body>
 
@@ -631,15 +662,15 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
         <div class="about-visual">
           <div class="about-stats">
             <div class="stat-card">
-              <span class="stat-number" data-target="5">0</span><span class="stat-plus">+</span>
+              <span class="stat-number" data-target="6">0</span><span class="stat-plus">+</span>
               <span class="stat-label">Years Experience</span>
             </div>
             <div class="stat-card">
-              <span class="stat-number" data-target="5+">0</span>
+              <span class="stat-number" data-target="7">0</span><span class="stat-plus">+</span>
               <span class="stat-label">Course Certifications</span>
             </div>
             <div class="stat-card">
-              <span class="stat-number" data-target="15">0</span><span class="stat-plus">+</span>
+              <span class="stat-number" data-target="10">0</span><span class="stat-plus">+</span>
               <span class="stat-label">Tools Mastered</span>
             </div>
           </div>
@@ -884,83 +915,233 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
     <div class="container">
       <div class="section-label">04 — Certifications &amp; Awards</div>
       <h2 class="section-heading">Credentials &amp; <span class="accent">Recognition</span></h2>
+      <h3 style="margin-bottom:12px;color:#0f172a;">Professional Certifications</h3>
+      <p style="margin-bottom:28px;color:#475569;">Continuous professional development through ServiceNow, Microsoft, Atlassian, Docker, GitHub and LinkedIn Learning.</p>
       <div class="certs-grid">
 
-        <div class="cert-card" data-delay="0">
-          <div class="cert-logo itsm">🖥️</div>
-          <div class="cert-info">
-            <h3>IT Service Desk</h3>
-            <p>Monitoring and Metrics Fundamentals</p>
-            <span class="cert-issuer">LinkedIn Learning</span>
+        <!-- ServiceNow -->
+        <div class="cert-card visible">
+          <span class="cert-badge servicenow">ServiceNow</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/servicenow.svg" alt="ServiceNow" />
+            </div>
+            <div class="cert-info">
+              <h3>Micro-Certification – Welcome to ServiceNow</h3>
+              <p>ServiceNow</p>
+              <span class="cert-issuer">Completed: Aug 2024 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge itsm">ITSM</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Micro-Certification Welcome to ServiceNow.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://partnerportal.servicenow.com/partnerhome?id=verify_certificate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="100">
-          <div class="cert-logo docker">🐳</div>
-          <div class="cert-info">
-            <h3>Docker Foundations</h3>
-            <p>Professional Certificate</p>
-            <span class="cert-issuer">Docker Inc.</span>
+        <!-- Atlassian -->
+        <div class="cert-card visible">
+          <span class="cert-badge atlassian">Atlassian</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/atlassian.svg" alt="Atlassian" />
+            </div>
+            <div class="cert-info">
+              <h3>Atlassian ITSM Professional Certificate</h3>
+              <p>Atlassian</p>
+              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge docker">Foundations</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Atlassian ITSM Professional Certificate.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/c6c962c582a7927c2d939301c424cf2b463a50835536c911edf828c83f400484">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="200">
-          <div class="cert-logo python">🐍</div>
-          <div class="cert-info">
-            <h3>Programming Using Python</h3>
-            <p>Introduction to Programming</p>
-            <span class="cert-issuer">Microsoft</span>
+        <!-- Microsoft Azure -->
+        <div class="cert-card visible">
+          <span class="cert-badge microsoft">Microsoft</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/Microsoft.svg" alt="Microsoft" />
+              <p>Microsoft</p>
+              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge python">Python</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Microsoft Azure Essentials Professional Certificate.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/2f26d158bada93d1617522c130240eae36861dba729a0d2ec92be36d97cec573">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="300">
-          <div class="cert-logo itsm">⚙️</div>
-          <div class="cert-info">
-            <h3>IT Service Desk</h3>
-            <p>Service Management</p>
-            <span class="cert-issuer">LinkedIn Learning</span>
+        <!-- Microsoft Security -->
+        <div class="cert-card visible">
+          <span class="cert-badge microsoft">Microsoft</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/Microsoft.svg" alt="Microsoft" />
+              <p>Microsoft</p>
+              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge itsm">ITSM</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Microsoft Security Essentials Professional Certificate.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/784f08f8e96fcfc38c60c1958b4bdb4e61ff55a702d6c26f46783c4a69760ce7">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="400">
-          <div class="cert-logo itsm">🔍</div>
-          <div class="cert-info">
-            <h3>IT Service Management Foundations</h3>
-            <p>Problem Management</p>
-            <span class="cert-issuer">LinkedIn Learning</span>
+        <!-- LinkedIn – Problem Management -->
+        <div class="cert-card visible">
+          <span class="cert-badge linkedin">LinkedIn</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
+              <p>LinkedIn Learning</p>
+              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge itsm">ITSM</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/IT Service Management Foundations Problem Management.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/46542a2038cd57552a6cb0525ffa3ced56148be5d4e235b308178be2c4f85c58">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="500">
-          <div class="cert-logo python">🏆</div>
-          <div class="cert-info">
-            <h3>Hack4Good — 1st Place</h3>
-            <p>Built a ServiceNow Virtual Agent chatbot for a non-profit</p>
-            <span class="cert-issuer">Hack4Good · July 2025</span>
+        <!-- LinkedIn – Change Management -->
+        <div class="cert-card visible">
+          <span class="cert-badge linkedin">LinkedIn</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
+              <p>LinkedIn Learning</p>
+              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge award">Award</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/IT Service Management Foundations Change Management.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/a0ca26c5c047a667a4e712d4ff73655a53021091b48577aae86f6a5c59ff6e46">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
         </div>
 
-        <div class="cert-card" data-delay="600">
-          <div class="cert-logo itsm">⭐</div>
-          <div class="cert-info">
-            <h3>Customer Satisfaction Award</h3>
-            <p>Outstanding service and proactive issue resolution</p>
-            <span class="cert-issuer">Capgemini</span>
+        <!-- Docker -->
+        <div class="cert-card visible">
+          <span class="cert-badge docker">Docker</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/docker.svg" alt="Docker" />
+            </div>
+            <div class="cert-info">
+              <h3>Docker Foundations Professional Certificate</h3>
+              <p>Docker Inc.</p>
+              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
+            </div>
           </div>
-          <div class="cert-badge award">Award</div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Docker Foundations Professional Certificate.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/be53351eb6064c26f6e94f0a120af29d2e3703694a1097ae5f04cd722364a0d0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
+        </div>
+
+        <!-- GitHub -->
+        <div class="cert-card visible">
+          <span class="cert-badge github">GitHub</span>
+          <div class="cert-card-body">
+            <div class="cert-logo">
+              <img src="SVG/github.svg" alt="GitHub" />
+            </div>
+            <div class="cert-info">
+              <h3>Career Essentials in GitHub Professional Certificate</h3>
+              <p>GitHub</p>
+              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
+            </div>
+          </div>
+          <div class="cert-actions">
+            <a class="cert-btn" target="_blank" href="Certificates/Career Essentials in GitHub Professional Certificate.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Certificate
+            </a>
+            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/72b91b07d15d7f2bbc24eb0cc6061bff7bda9bc8540cbdb468b370ec91b9c991">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Verify
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <h3 style="margin:48px 0 20px;color:#0f172a;">Professional Recognition</h3>
+      <div class="certs-grid">
+
+        <!-- Hack4Good -->
+        <div class="cert-card visible">
+          <span class="cert-badge award">Award</span>
+          <div class="cert-card-body">
+            <div class="cert-logo" style="background:#fef3c7;border-color:rgba(245,158,11,0.3);font-size:1.8rem;padding:4px;">🏆</div>
+            <div class="cert-info">
+              <h3>Hack4Good — 1st Place</h3>
+              <p>Built a ServiceNow Virtual Agent chatbot for a non-profit. Led a team of four.</p>
+              <span class="cert-issuer">Hack4Good · July 2025</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Satisfaction -->
+        <div class="cert-card visible">
+          <span class="cert-badge award">Award</span>
+          <div class="cert-card-body">
+            <div class="cert-logo" style="background:#fef9c3;border-color:rgba(234,179,8,0.3);font-size:1.8rem;padding:4px;">⭐</div>
+            <div class="cert-info">
+              <h3>Customer Satisfaction Award</h3>
+              <p>Outstanding service and proactive issue resolution.</p>
+              <span class="cert-issuer">Capgemini</span>
+            </div>
+          </div>
         </div>
 
       </div>
     </div>
   </section>
-
-  <!-- ===== EDUCATION ===== -->
+<!-- ===== EDUCATION ===== -->
   <section class="section education" id="education">
     <div class="container">
       <div class="section-label">05 — Education</div>
