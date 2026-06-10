@@ -590,11 +590,11 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
         </div>
         <p class="hero-sub">5+ years in Industry as IT Support Engineer · Erlangen, Germany</p>
         <div class="pipeline-status">
-          <span class="ps-dot"></span><span class="ps-label">ITSM</span>
+          <span class="ps-dot"></span><span class="ps-label">Incident Management</span>
           <span class="ps-sep">/</span>
-          <span class="ps-dot delay-1"></span><span class="ps-label">Automation</span>
+          <span class="ps-dot delay-1"></span><span class="ps-label">ITSM</span>
           <span class="ps-sep">/</span>
-          <span class="ps-dot delay-2"></span><span class="ps-label">Azure AD</span>
+          <span class="ps-dot delay-2"></span><span class="ps-label">ServiceNow</span>
         </div>
         <div class="hero-badges">
           <span class="badge"><img src="https://img.shields.io/badge/ServiceNow-Expert-1ACE5B?logo=servicenow&logoColor=white&style=flat-square" alt="ServiceNow" /></span>
@@ -1127,14 +1127,39 @@ mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => 
   resize();
   window.addEventListener("resize", () => { resize(); init(); }, { passive: true });
 
+  // Returns the centre of the photo in canvas coordinates.
+  // The photo (.hero-photo-outer) is positioned inside .hero-visual which sits
+  // on the right side of .hero-inner. We read it from the DOM so it works at
+  // any viewport width.
+  function getPhotoCentre() {
+    const photoEl = document.querySelector(".hero-photo-outer");
+    if (photoEl) {
+      const rect   = photoEl.getBoundingClientRect();
+      const cRect  = canvas.getBoundingClientRect();
+      return {
+        cx: rect.left + rect.width  / 2 - cRect.left,
+        cy: rect.top  + rect.height / 2 - cRect.top,
+        r:  rect.width / 2   // radius of the photo circle
+      };
+    }
+    // Fallback: right 30 % of canvas, vertically centred
+    return { cx: W * 0.72, cy: H * 0.5, r: 140 };
+  }
+
   class InfraNode {
-    constructor(def) {
+    constructor(def, index, total) {
       this.label = def.label; this.color = def.color; this.size = def.size;
-      this.orbitRx = 185 + ring * 70 + Math.random() * 30;
-      this.orbitRy = 165 + ring * 55 + Math.random() * 25;
+      // Each node gets its own elliptical orbit around the photo.
+      // Spread them across two concentric rings so they don't stack.
+      const ring   = index % 2;                    // 0 = inner, 1 = outer
+      this.orbitRx = 185 + ring * 70 + Math.random() * 30; // horizontal radius
+      this.orbitRy = 165 + ring * 55 + Math.random() * 25; // vertical radius
+      // Stagger starting angles so they begin evenly distributed
       this.angle   = (index / total) * Math.PI * 2 + Math.random() * 0.4;
+      // Alternate direction for variety; inner ring goes CW, outer CCW
       this.speed   = (0.0028 + Math.random() * 0.0018) * (ring === 0 ? 1 : -1);
-      this.pulse = Math.random() * Math.PI * 2;
+      this.pulse   = Math.random() * Math.PI * 2;
+      this.x = 0; this.y = 0; // set in update()
     }
     update() {
       this.angle += this.speed;
@@ -1178,19 +1203,19 @@ mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => 
   }
 
   function init() {
-    const count = Math.min(NODE_DEFS.length, Math.max(7, Math.floor((W * H) / 38000) + 5));
-    nodes = NODE_DEFS.slice(0, count).map(def => new InfraNode(def));
+    const total = NODE_DEFS.length;
+    nodes = NODE_DEFS.map((def, i) => new InfraNode(def, i, total));
     packets = [];
   }
 
   function drawConnections() {
-    const threshold = Math.min(W, H) * 0.42;
+    const threshold = 220; // only connect nearby orbital neighbours
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < threshold) {
-          const alpha = (1 - dist / threshold) * 0.18;
+          const alpha = (1 - dist / threshold) * 0.15;
           ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
           ctx.strokeStyle = "#3b82f6"; ctx.globalAlpha = alpha; ctx.lineWidth = 0.8;
           ctx.setLineDash([5, 9]); ctx.stroke(); ctx.setLineDash([]);
