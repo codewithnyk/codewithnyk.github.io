@@ -577,7 +577,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   color: var(--text-muted); font-size: 1.05rem; max-width: 540px;
   margin-bottom: 40px; line-height: 1.75;
 }
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .contact-card {
   display: flex; align-items: center; gap: 16px;
   background: var(--bg-card); border: 1px solid var(--border);
@@ -588,7 +588,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 .contact-card.info-card { pointer-events: none; }
 .contact-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
 .contact-card h4 { font-size: 0.78rem; color: var(--text-faint); font-weight: 500; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
-.contact-card p  { font-size: 0.9rem; color: var(--text); font-weight: 500; word-break: break-word;
+.contact-card p  { font-size: 0.9rem; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 overflow-wrap: break-word;}
 
 /* ============================================================
@@ -670,7 +670,7 @@ overflow-wrap: break-word;}
     <div class="hero-blob blob-2"></div>
     <div class="hero-inner">
       <div class="hero-content">
-        <p class="hero-greeting">Hello, People! 👋</p>
+        <p class="hero-greeting">Hello, World! 👋</p>
         <h1 class="hero-name">Nikhil <span class="accent">Mishra</span></h1>
         <div class="hero-typewriter">
           <span class="tw-prefix">I am </span>
@@ -1301,7 +1301,11 @@ overflow-wrap: break-word;}
   <a href="mailto:emailtonikhilmishra@gmail.com"
      class="contact-card">
 
-    <div class="contact-icon">✉️</div>
+    <div class="contact-icon">
+      <img src="SVG/gmail.svg"
+           alt="Email"
+           style="width:32px;height:32px;">
+    </div>
 
     <div>
       <h4>Email</h4>
@@ -1354,20 +1358,13 @@ overflow-wrap: break-word;}
   </a>
 
   <!-- LOCATION -->
-
-  <div class="contact-card info-card">
-
+  <a href="https://maps.google.com/?q=Erlangen,Bavaria,Germany" target="_blank" class="contact-card">
     <div class="contact-icon">📍</div>
-
     <div>
-
       <h4>Location</h4>
-
       <p>Erlangen, Bavaria, Germany</p>
-
     </div>
-
-  </div>
+  </a>
 
 </div>
     </div>
