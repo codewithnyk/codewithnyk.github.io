@@ -60,6 +60,62 @@ ul  { list-style: none; }
 button { cursor: pointer; border: none; background: none; }
 
 /* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 10000;
+  background: var(--gradient); width: 0%;
+  box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ============================================================
+   SCROLL-DRIVEN REVEAL SYSTEM
+   ============================================================ */
+.reveal {
+  opacity: 0; transform: translateY(44px);
+  transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.reveal-left  { transform: translateX(-48px) translateY(0); }
+.reveal.reveal-right { transform: translateX(48px) translateY(0); }
+.reveal.reveal-scale { transform: scale(0.93) translateY(20px); }
+.reveal.reveal-blur  { opacity: 0; filter: blur(10px); transform: translateY(20px);
+  transition: opacity 0.85s ease, transform 0.85s ease, filter 0.85s ease; }
+.reveal.in-view { opacity: 1; transform: none; filter: none; }
+
+/* Staggered grid children */
+.stagger-children > * {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+}
+.stagger-children.in-view > *:nth-child(1)  { opacity:1;transform:none;transition-delay:0.00s; }
+.stagger-children.in-view > *:nth-child(2)  { opacity:1;transform:none;transition-delay:0.08s; }
+.stagger-children.in-view > *:nth-child(3)  { opacity:1;transform:none;transition-delay:0.16s; }
+.stagger-children.in-view > *:nth-child(4)  { opacity:1;transform:none;transition-delay:0.24s; }
+.stagger-children.in-view > *:nth-child(5)  { opacity:1;transform:none;transition-delay:0.32s; }
+.stagger-children.in-view > *:nth-child(6)  { opacity:1;transform:none;transition-delay:0.40s; }
+.stagger-children.in-view > *:nth-child(7)  { opacity:1;transform:none;transition-delay:0.48s; }
+.stagger-children.in-view > *:nth-child(8)  { opacity:1;transform:none;transition-delay:0.56s; }
+.stagger-children.in-view > *:nth-child(n+9){ opacity:1;transform:none;transition-delay:0.64s; }
+
+/* Section heading animated underline */
+.section-heading::after {
+  content:''; position:absolute; bottom:-6px; left:0;
+  height:3px; width:0; background:var(--gradient);
+  transition: width 0.9s cubic-bezier(0.22,1,0.36,1) 0.25s;
+  border-radius:2px;
+}
+.section-heading { position:relative; }
+.section-heading.in-view::after { width: 56px; }
+
+/* Section label slide-in */
+.section-label {
+  opacity:0; transform:translateX(-18px);
+  transition: opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s;
+}
+.section-label.in-view { opacity:1; transform:none; }
+
+/* ============================================================
    NOISE OVERLAY
    ============================================================ */
 .noise {
@@ -532,7 +588,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 .contact-card.info-card { pointer-events: none; }
 .contact-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
 .contact-card h4 { font-size: 0.78rem; color: var(--text-faint); font-weight: 500; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
-.contact-card p  { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+.contact-card p  { font-size: 0.9rem; color: var(--text); font-weight: 500; word-break: break-word;
+overflow-wrap: break-word;}
 
 /* ============================================================
    FOOTER
@@ -577,7 +634,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 </head>
 <body>
 
-  <div class="noise"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+<div class="noise"></div>
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
@@ -657,10 +715,10 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   <!-- ===== ABOUT ===== -->
   <section class="section about" id="about">
     <div class="container">
-      <div class="section-label">01 — About Me</div>
+      <div class="section-label reveal">01 — About Me</div>
       <div class="about-grid">
-        <div class="about-visual">
-          <div class="about-stats">
+        <div class="about-visual reveal reveal-right">
+          <div class="about-stats stagger-children">
             <div class="stat-card">
               <span class="stat-number" data-target="6">0</span><span class="stat-plus">+</span>
               <span class="stat-label">Years Experience</span>
@@ -675,8 +733,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             </div>
           </div>
         </div>
-        <div class="about-text">
-          <h2 class="section-heading">Enterprise IT Support <span class="accent">That Delivers</span></h2>
+        <div class="about-text reveal reveal-left">
+          <h2 class="section-heading reveal">Enterprise IT Support <span class="accent">That Delivers</span></h2>
           <p>IT Support Engineer with 5+ years of experience delivering Level 1 and Level 2 support in enterprise environments. Skilled in incident management, troubleshooting, and user support using tools such as <strong>ServiceNow</strong> and <strong>Jira</strong>, with exposure to Windows, Linux, and Microsoft 365 environments. Focused on reliable service delivery, root cause analysis, and improving operational efficiency.</p>
           <p>Currently at <strong>Makersite GmbH</strong> in Germany, I provide technical support and automate data workflows using Python. I won <strong>1st place at Hack4Good 2025</strong>, building a ServiceNow Virtual Agent chatbot for a non-profit.</p>
           <ul class="about-highlights">
@@ -687,7 +745,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <li>📊 Monitoring — Grafana, Splunk, Log Analysis</li>
             <li>🌍 Languages — English (C2), German (B1 - Learning)</li>
           </ul>
-          <div class="about-links">
+          <div class="about-links reveal">
             <a href="mailto:emailtonikhilmishra@gmail.com" class="chip">✉ emailtonikhilmishra@gmail.com</a>
             <a href="https://www.linkedin.com/in/nikhil--mishra" target="_blank" rel="noopener noreferrer" class="chip">💼 LinkedIn</a>
           </div>
@@ -699,8 +757,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   <!-- ===== SKILLS ===== -->
   <section class="section skills" id="skills">
     <div class="container">
-      <div class="section-label">02 — Skills &amp; Tools</div>
-      <h2 class="section-heading">My <span class="accent">Tech Stack</span></h2>
+      <div class="section-label reveal">02 — Skills &amp; Tools</div>
+      <h2 class="section-heading reveal">My <span class="accent">Tech Stack</span></h2>
 
 
       <div class="pipeline-scroll">
@@ -794,9 +852,9 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   <!-- ===== EXPERIENCE ===== -->
   <section class="section experience" id="experience">
     <div class="container">
-      <div class="section-label">03 — Work Experience</div>
-      <h2 class="section-heading">Professional <span class="accent">Journey</span></h2>
-      <div class="timeline">
+      <div class="section-label reveal">03 — Work Experience</div>
+      <h2 class="section-heading reveal">Professional <span class="accent">Journey</span></h2>
+      <div class="timeline reveal">
 
         <!-- Makersite -->
         <div class="timeline-item">
@@ -913,15 +971,15 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   <!-- ===== CERTIFICATIONS & AWARDS ===== -->
   <section class="section certifications" id="certifications">
     <div class="container">
-      <div class="section-label">04 — Certifications &amp; Awards</div>
-      <h2 class="section-heading">Credentials &amp; <span class="accent">Recognition</span></h2>
-      <h3 style="margin-bottom:12px;color:#0f172a;">Professional Certifications</h3>
+      <div class="section-label reveal">04 — Certifications &amp; Awards</div>
+      <h2 class="section-heading reveal">Credentials &amp; <span class="accent">Recognition</span></h2>
+      <h3 style="margin-bottom:12px;color:#0f172a;">Professional Learnings</h3>
       <p style="margin-bottom:28px;color:#475569;">Continuous professional development through ServiceNow, Microsoft, Atlassian, Docker, GitHub and LinkedIn Learning.</p>
-      <div class="certs-grid">
+      <div class="certs-grid stagger-children">
 
         <!-- ServiceNow -->
         <div class="cert-card visible">
-          <span class="cert-badge servicenow">ServiceNow</span>
+          
           <div class="cert-card-body">
             <div class="cert-logo">
               <img src="SVG/servicenow.svg" alt="ServiceNow" />
@@ -929,7 +987,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <div class="cert-info">
               <h3>Micro-Certification – Welcome to ServiceNow</h3>
               <p>ServiceNow</p>
-              <span class="cert-issuer">Completed: Aug 2024 · ✔ Verified</span>
+              <span class="cert-issuer">Completed: Aug 2024 </span>
             </div>
           </div>
           <div class="cert-actions">
@@ -946,7 +1004,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 
         <!-- Atlassian -->
         <div class="cert-card visible">
-          <span class="cert-badge atlassian">Atlassian</span>
+          
           <div class="cert-card-body">
             <div class="cert-logo">
               <img src="SVG/atlassian.svg" alt="Atlassian" />
@@ -954,7 +1012,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <div class="cert-info">
               <h3>Atlassian ITSM Professional Certificate</h3>
               <p>Atlassian</p>
-              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
+              <span class="cert-issuer">Completed: Apr 2026 </span>
             </div>
           </div>
           <div class="cert-actions">
@@ -970,96 +1028,155 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
         </div>
 
         <!-- Microsoft Azure -->
-        <div class="cert-card visible">
-          <span class="cert-badge microsoft">Microsoft</span>
-          <div class="cert-card-body">
-            <div class="cert-logo">
-              <img src="SVG/Microsoft.svg" alt="Microsoft" />
-              <p>Microsoft</p>
-              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
-            </div>
-          </div>
-          <div class="cert-actions">
-            <a class="cert-btn" target="_blank" href="Certificates/Microsoft Azure Essentials Professional Certificate.pdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              View Certificate
-            </a>
-            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/2f26d158bada93d1617522c130240eae36861dba729a0d2ec92be36d97cec573">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Verify
-            </a>
-          </div>
-        </div>
+<div class="cert-card visible">
+  
+
+  <div class="cert-card-body">
+
+    <div class="cert-logo">
+      <img src="SVG/Microsoft.svg" alt="Microsoft" />
+    </div>
+
+    <div class="cert-info">
+      <h3>Microsoft Azure Essentials Professional Certificate</h3>
+      <p>Microsoft</p>
+      <span class="cert-issuer">
+        Completed: Apr 2026
+      </span>
+    </div>
+
+  </div>
+
+  <div class="cert-actions">
+    <a class="cert-btn" target="_blank"
+       href="Certificates/Microsoft Azure Essentials Professional Certificate.pdf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      View Certificate
+    </a>
+
+    <a class="cert-btn verify-btn"
+       target="_blank"
+       href="https://www.linkedin.com/learning/certificates/2f26d158bada93d1617522c130240eae36861dba729a0d2ec92be36d97cec573">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      Verify
+    </a>
+  </div>
+</div>
 
         <!-- Microsoft Security -->
-        <div class="cert-card visible">
-          <span class="cert-badge microsoft">Microsoft</span>
-          <div class="cert-card-body">
-            <div class="cert-logo">
-              <img src="SVG/Microsoft.svg" alt="Microsoft" />
-              <p>Microsoft</p>
-              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
-            </div>
-          </div>
-          <div class="cert-actions">
-            <a class="cert-btn" target="_blank" href="Certificates/Microsoft Security Essentials Professional Certificate.pdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              View Certificate
-            </a>
-            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/784f08f8e96fcfc38c60c1958b4bdb4e61ff55a702d6c26f46783c4a69760ce7">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Verify
-            </a>
-          </div>
-        </div>
+<div class="cert-card visible">
+  
 
-        <!-- LinkedIn – Problem Management -->
-        <div class="cert-card visible">
-          <span class="cert-badge linkedin">LinkedIn</span>
-          <div class="cert-card-body">
-            <div class="cert-logo">
-              <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
-              <p>LinkedIn Learning</p>
-              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
-            </div>
-          </div>
-          <div class="cert-actions">
-            <a class="cert-btn" target="_blank" href="Certificates/IT Service Management Foundations Problem Management.pdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              View Certificate
-            </a>
-            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/46542a2038cd57552a6cb0525ffa3ced56148be5d4e235b308178be2c4f85c58">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Verify
-            </a>
-          </div>
-        </div>
+  <div class="cert-card-body">
 
-        <!-- LinkedIn – Change Management -->
-        <div class="cert-card visible">
-          <span class="cert-badge linkedin">LinkedIn</span>
-          <div class="cert-card-body">
-            <div class="cert-logo">
-              <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
-              <p>LinkedIn Learning</p>
-              <span class="cert-issuer">Completed: Apr 2026 · ✔ Verified</span>
-            </div>
-          </div>
-          <div class="cert-actions">
-            <a class="cert-btn" target="_blank" href="Certificates/IT Service Management Foundations Change Management.pdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              View Certificate
-            </a>
-            <a class="cert-btn verify-btn" target="_blank" href="https://www.linkedin.com/learning/certificates/a0ca26c5c047a667a4e712d4ff73655a53021091b48577aae86f6a5c59ff6e46">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Verify
-            </a>
-          </div>
-        </div>
+    <div class="cert-logo">
+      <img src="SVG/Microsoft.svg" alt="Microsoft" />
+    </div>
+
+    <div class="cert-info">
+      <h3>Microsoft Security Essentials Professional Certificate</h3>
+      <p>Microsoft</p>
+      <span class="cert-issuer">
+        Completed: May 2026 
+      </span>
+    </div>
+
+  </div>
+
+  <div class="cert-actions">
+    <a class="cert-btn"
+       target="_blank"
+       href="Certificates/Microsoft Security Essentials Professional Certificate.pdf">
+      View Certificate
+    </a>
+
+    <a class="cert-btn verify-btn"
+       target="_blank"
+       href="https://www.linkedin.com/learning/certificates/784f08f8e96fcfc38c60c1958b4bdb4e61ff55a702d6c26f46783c4a69760ce7">
+      Verify
+    </a>
+  </div>
+</div>
+
+        <!-- Problem Management -->
+<div class="cert-card visible">
+  
+
+  <div class="cert-card-body">
+
+    <div class="cert-logo">
+      <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
+    </div>
+
+    <div class="cert-info">
+      <h3>IT Service Management Foundations: Problem Management</h3>
+      <p>LinkedIn Learning</p>
+      <span class="cert-issuer">
+        Completed: Apr 2026 
+      </span>
+    </div>
+
+  </div>
+
+  <div class="cert-actions">
+    <a class="cert-btn"
+       target="_blank"
+       href="Certificates/IT Service Management Foundations Problem Management.pdf">
+      View Certificate
+    </a>
+
+    <a class="cert-btn verify-btn"
+       target="_blank"
+       href="https://www.linkedin.com/learning/certificates/46542a2038cd57552a6cb0525ffa3ced56148be5d4e235b308178be2c4f85c58">
+      Verify
+    </a>
+  </div>
+</div>
+
+        <!-- Change Management -->
+<div class="cert-card visible">
+  
+
+  <div class="cert-card-body">
+
+    <div class="cert-logo">
+      <img src="SVG/Linkedin.svg" alt="LinkedIn Learning" />
+    </div>
+
+    <div class="cert-info">
+      <h3>IT Service Management Foundations: Change Management</h3>
+      <p>LinkedIn Learning</p>
+      <span class="cert-issuer">
+        Completed: Apr 2026 
+      </span>
+    </div>
+
+  </div>
+
+  <div class="cert-actions">
+    <a class="cert-btn"
+       target="_blank"
+       href="Certificates/IT Service Management Foundations Change Management.pdf">
+      View Certificate
+    </a>
+
+    <a class="cert-btn verify-btn"
+       target="_blank"
+       href="https://www.linkedin.com/learning/certificates/a0ca26c5c047a667a4e712d4ff73655a53021091b48577aae86f6a5c59ff6e46">
+      Verify
+    </a>
+  </div>
+</div>
 
         <!-- Docker -->
         <div class="cert-card visible">
-          <span class="cert-badge docker">Docker</span>
+          
           <div class="cert-card-body">
             <div class="cert-logo">
               <img src="SVG/docker.svg" alt="Docker" />
@@ -1067,7 +1184,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <div class="cert-info">
               <h3>Docker Foundations Professional Certificate</h3>
               <p>Docker Inc.</p>
-              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
+              <span class="cert-issuer">Completed: May 2026 </span>
             </div>
           </div>
           <div class="cert-actions">
@@ -1084,7 +1201,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 
         <!-- GitHub -->
         <div class="cert-card visible">
-          <span class="cert-badge github">GitHub</span>
+          
           <div class="cert-card-body">
             <div class="cert-logo">
               <img src="SVG/github.svg" alt="GitHub" />
@@ -1092,7 +1209,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <div class="cert-info">
               <h3>Career Essentials in GitHub Professional Certificate</h3>
               <p>GitHub</p>
-              <span class="cert-issuer">Completed: May 2026 · ✔ Verified</span>
+              <span class="cert-issuer">Completed: May 2026</span>
             </div>
           </div>
           <div class="cert-actions">
@@ -1110,7 +1227,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
       </div>
 
       <h3 style="margin:48px 0 20px;color:#0f172a;">Professional Recognition</h3>
-      <div class="certs-grid">
+      <div class="certs-grid stagger-children">
 
         <!-- Hack4Good -->
         <div class="cert-card visible">
@@ -1119,7 +1236,7 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
             <div class="cert-logo" style="background:#fef3c7;border-color:rgba(245,158,11,0.3);font-size:1.8rem;padding:4px;">🏆</div>
             <div class="cert-info">
               <h3>Hack4Good — 1st Place</h3>
-              <p>Built a ServiceNow Virtual Agent chatbot for a non-profit. Led a team of four.</p>
+              <p>Helped in building a ServiceNow Virtual Agent chatbot for a non-profit organization.</p>
               <span class="cert-issuer">Hack4Good · July 2025</span>
             </div>
           </div>
@@ -1127,13 +1244,13 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 
         <!-- Customer Satisfaction -->
         <div class="cert-card visible">
-          <span class="cert-badge award">Award</span>
+          
           <div class="cert-card-body">
             <div class="cert-logo" style="background:#fef9c3;border-color:rgba(234,179,8,0.3);font-size:1.8rem;padding:4px;">⭐</div>
             <div class="cert-info">
               <h3>Customer Satisfaction Award</h3>
               <p>Outstanding service and proactive issue resolution.</p>
-              <span class="cert-issuer">Capgemini</span>
+              <span class="cert-issuer">Capgemini · February 2020</span>
             </div>
           </div>
         </div>
@@ -1144,9 +1261,9 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
 <!-- ===== EDUCATION ===== -->
   <section class="section education" id="education">
     <div class="container">
-      <div class="section-label">05 — Education</div>
-      <h2 class="section-heading">Academic <span class="accent">Background</span></h2>
-      <div class="edu-grid">
+      <div class="section-label reveal">05 — Education</div>
+      <h2 class="section-heading reveal">Academic <span class="accent">Background</span></h2>
+      <div class="edu-grid stagger-children">
 
         <div class="edu-card">
           <div class="edu-icon">🎓</div>
@@ -1176,40 +1293,83 @@ body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
   <!-- ===== CONTACT ===== -->
   <section class="section contact" id="contact">
     <div class="container">
-      <div class="section-label">06 — Contact</div>
-      <h2 class="section-heading">Let's <span class="accent">Connect</span></h2>
+      <div class="section-label reveal">06 — Contact</div>
+      <h2 class="section-heading reveal">Let's <span class="accent">Connect</span></h2>
       <p class="contact-intro">Open to full-time IT operations, system administration, or IT support roles in Germany. Authorised to work full-time and available immediately.</p>
-      <div class="contact-grid">
-        <a href="mailto:emailtonikhilmishra@gmail.com" class="contact-card">
-          <div class="contact-icon">✉️</div>
-          <div>
-            <h4>Email</h4>
-            <p>emailtonikhilmishra@gmail.com</p>
-          </div>
-        </a>
-        <!-- PHONE: Replace +49-XXXXXXXXXX with your actual number -->
-        <a href="tel:+49-1624770363" class="contact-card">
-          <div class="contact-icon">📞</div>
-          <div>
-            <h4>Phone</h4>
-            <p>+49 162 4770363</p>
-          </div>
-        </a>
-        <a href="https://www.linkedin.com/in/nikhil--mishra" target="_blank" rel="noopener noreferrer" class="contact-card">
-          <div class="contact-icon">💼</div>
-          <div>
-            <h4>LinkedIn</h4>
-            <p>nikhil--mishra</p>
-          </div>
-        </a>
-        <div class="contact-card info-card">
-          <div class="contact-icon">📍</div>
-          <div>
-            <h4>Location</h4>
-            <p>Erlangen, Bavaria, Germany</p>
-          </div>
-        </div>
-      </div>
+      <div class="contact-grid stagger-children">
+
+  <a href="mailto:emailtonikhilmishra@gmail.com"
+     class="contact-card">
+
+    <div class="contact-icon">✉️</div>
+
+    <div>
+      <h4>Email</h4>
+
+      <p style="word-break: break-word;">
+        emailtonikhilmishra@gmail.com
+      </p>
+
+    </div>
+
+  </a>
+
+  <!-- PHONE -->
+
+  <a href="tel:+491624770363"
+     class="contact-card">
+
+    <div class="contact-icon">📞</div>
+
+    <div>
+      <h4>Phone</h4>
+      <p>+49 162 4770363</p>
+    </div>
+
+  </a>
+
+  <!-- LINKEDIN -->
+
+  <a href="https://www.linkedin.com/in/nikhil--mishra"
+     target="_blank"
+     rel="noopener noreferrer"
+     class="contact-card">
+
+    <div class="contact-icon">
+
+      <img src="SVG/Linkedin.svg"
+           alt="LinkedIn"
+           style="width:32px;height:32px;">
+
+    </div>
+
+    <div>
+
+      <h4>LinkedIn</h4>
+
+      <p>Connect on LinkedIn</p>
+
+    </div>
+
+  </a>
+
+  <!-- LOCATION -->
+
+  <div class="contact-card info-card">
+
+    <div class="contact-icon">📍</div>
+
+    <div>
+
+      <h4>Location</h4>
+
+      <p>Erlangen, Bavaria, Germany</p>
+
+    </div>
+
+  </div>
+
+</div>
     </div>
   </section>
 
@@ -1492,6 +1652,61 @@ const sectionIO = new IntersectionObserver((entries) => {
   });
 }, { rootMargin: "-40% 0px -55% 0px" });
 sections.forEach(s => sectionIO.observe(s));
+
+// ==================== SCROLL PROGRESS BAR ====================
+(function() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (scrolled / total * 100).toFixed(2) + '%';
+  }, { passive: true });
+})();
+
+// ==================== APPLE-STYLE SCROLL REVEALS ====================
+(function() {
+  // Reveal observer for .reveal and .stagger-children
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .stagger-children, .section-label, .section-heading').forEach(el => {
+    revealIO.observe(el);
+  });
+
+  // Parallax on hero section
+  const hero = document.querySelector('.hero');
+  const heroContent = document.querySelector('.hero-content');
+  const heroCanvas = document.querySelector('#heroCanvas');
+  if (hero) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight * 1.2) {
+        if (heroContent) heroContent.style.transform = `translateY(${y * 0.28}px)`;
+        if (heroCanvas) heroCanvas.style.transform = `translateY(${y * 0.12}px)`;
+        if (hero) hero.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.85));
+      }
+    }, { passive: true });
+  }
+
+  // Smooth section background tint on enter
+  const sectionIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.transition = 'background 0.6s ease';
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section').forEach(s => sectionIO.observe(s));
+
+})();
+
   </script>
 </body>
 </html>
